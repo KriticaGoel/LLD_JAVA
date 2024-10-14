@@ -17,9 +17,9 @@
       - [Synchronized- Monitor](#Synchronized—Monitor)
      - [Problem of a Synchronized - Monitor](#problem-of-a-synchronized---monitor)
    - [Synchronized-Lock](#Synchronized-Lock)
-      - [Advantage of a Synchronized-Lock](#Advantage-of-a-Synchronized-Lock)
-- [Atomic Operations](#Atomic-Operations)
-- [Concurrent Data structures](#Concurrent-Data-structures)
+       - [Advantage of a Synchronized-Lock](#advantage-of-a-synchronized-lock)
+- [Atomic Operations](#atomic-operations)
+- [Concurrent Data structures](#concurrent-data-structures)
 ## DATA SHARING BETWEEN THREAD
 
 ### Stack Memory Region
@@ -455,7 +455,7 @@ Complete code
 
 ```
 
-2. **Synchronized-Lock**
+2. ##### Synchronized-Lock
 
 > **Definition**: Locks specific sections of code, allowing other methods to run concurrently.
 
@@ -550,7 +550,7 @@ Complete code:
 
 ![objectLock.png](..%2F..%2F..%2Fresources%2FobjectLock.png)
 
-**Atomic Operations**
+#### Atomic Operations
 1. All assignments are atomic.
 2. All getters and setters are atomic. Since we are assigning values only.
 3. All primitive types are atomic except double and long.
