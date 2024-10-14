@@ -344,7 +344,8 @@ FirstSecondThird
 ```
 
 > 3. H20
-     There are two kinds of threads: oxygen and hydrogen. Your goal is to group these threads to form water molecules.
+
+There are two kinds of threads: oxygen and hydrogen. Your goal is to group these threads to form water molecules.
 
 There is a barrier where each thread has to wait until a complete molecule can be formed. Hydrogen and oxygen threads
 will be given releaseHydrogen and releaseOxygen methods respectively, which will allow them to pass the barrier. These
@@ -397,6 +398,79 @@ HHO
 HHO
 HHO
 ```
+
+> 4. Print FooBar Alternately
+
+Suppose you are given the following code:
+
+```java
+class FooBar {
+    public void foo() {
+        for (int i = 0; i < n; i++) {
+            print("foo");
+        }
+    }
+
+    public void bar() {
+        for (int i = 0; i < n; i++) {
+            print("bar");
+        }
+    }
+}
+```
+
+The same instance of FooBar will be passed to two different threads:
+
+thread A will call foo(), while
+
+thread B will call bar().
+
+Modify the given program to output "foobar" n times.
+
+```java
+private static class FooBar {
+    private int n;
+    Semaphore foo;
+    Semaphore bar;
+
+    public FooBar(int n) {
+        this.n = n;
+        foo = new Semaphore(1);
+        bar = new Semaphore(0);
+    }
+
+    public void foo(Runnable printFoo) throws InterruptedException {
+
+        for (int i = 0; i < n; i++) {
+            foo.acquire();
+            // printFoo.run() outputs "foo". Do not change or remove this line.
+            printFoo.run();
+            bar.release();
+        }
+    }
+
+    public void bar(Runnable printBar) throws InterruptedException {
+
+        for (int i = 0; i < n; i++) {
+            bar.acquire();
+            // printBar.run() outputs "bar". Do not change or remove this line.
+            printBar.run();
+            foo.release();
+        }
+    }
+}
+```
+
+```
+Output:
+foobar
+```
+
+> 5.Print Zero Even Odd
+
+
+https://leetcode.com/problemset/concurrency/
+
 ## Concurrent Data structures
 
 A concurrent data structure is a particular way of storing and organizing data for access by multiple computing threads (or processes) on a computer. A shared mutable state very easily leads to problems when concurrency is involved. If access to shared mutable objects is not managed properly, applications can quickly become prone to some hard-to-detect concurrency errors.
