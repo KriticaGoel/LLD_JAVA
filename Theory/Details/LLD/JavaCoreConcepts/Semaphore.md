@@ -141,13 +141,282 @@ while (true) {
 
 ### CODE
 
-1. Producer and consumer code
+> 1. Producer and consumer code
 
-2. Print in order
+```java
+public class Main {
 
-3. H20
-4.
+    public static void main(String[] args) {
+        //Shared Object
+        Queue<Object> queue = new ConcurrentLinkedQueue<>();
 
+        //Create two Semaphore
+        Semaphore producer = new Semaphore(2);// give access to producer first with capacity 5
+        Semaphore consumer = new Semaphore(0); // Block consumer to execute unless producer notifies
+
+        for (int i = 0; i < 5; i++) {
+            Producer p = new Producer(queue, producer, consumer);
+            Consumer c = new Consumer(queue, producer, consumer);
+            Thread t1 = new Thread(p);
+            t1.start();
+            System.out.println(t1.getName() + " t1 started");
+            Thread t2 = new Thread(c);
+            t2.start();
+        }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Final result " + queue.size());
+
+
+    }
+}
+```
+
+```java
+public class Producer implements Runnable {
+    private Queue<Object> sharedDrive;
+    private Semaphore producer;
+    private Semaphore consumer;
+
+    Producer(Queue<Object> sharedDrive, Semaphore producer, Semaphore consumer) {
+        this.sharedDrive = sharedDrive;
+        this.producer = producer;
+        this.consumer = consumer;
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println(Thread.currentThread().getName() + ": Producer going to start " + producer.availablePermits());
+            producer.acquire();
+            System.out.println(Thread.currentThread().getName() + ": Producer started " + producer.availablePermits());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        sharedDrive.add(new Object());
+        //notify consumer to continue the task
+        System.out.println(Thread.currentThread().getName() + ": Producer going to released consumer " + consumer.availablePermits());
+        consumer.release();
+        System.out.println(Thread.currentThread().getName() + ": Consumer count " + consumer.availablePermits());
+    }
+}
+```
+
+```java
+public class Consumer implements Runnable {
+
+    private Queue<Object> sharedDrive;
+    private Semaphore producer;
+    private Semaphore consumer;
+
+    Consumer(Queue<Object> sharedDrive, Semaphore producer, Semaphore consumer) {
+        this.sharedDrive = sharedDrive;
+        this.producer = producer;
+        this.consumer = consumer;
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println(Thread.currentThread().getName() + ": Consumer going to start " + consumer.availablePermits());
+            consumer.acquire();
+            System.out.println(Thread.currentThread().getName() + ": Consumer started " + consumer.availablePermits());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        sharedDrive.remove();
+        //notify producer to continue the task
+        System.out.println(Thread.currentThread().getName() + ": Consumer going to released producer " + producer.availablePermits());
+        producer.release();
+        System.out.println(Thread.currentThread().getName() + ": producer count " + producer.availablePermits());
+    }
+}
+```
+
+```
+OUTPUT
+Thread-0 t1 started
+Thread-2 t1 started
+Thread-4 t1 started
+Thread-6 t1 started
+Thread-8 t1 started
+Thread-5: Consumer going to start 0
+Thread-8: Producer going to start 2
+Thread-3: Consumer going to start 0
+Thread-0: Producer going to start 2
+Thread-4: Producer going to start 2
+Thread-2: Producer going to start 2
+Thread-9: Consumer going to start 0
+Thread-7: Consumer going to start 0
+Thread-1: Consumer going to start 0
+Thread-8: Producer started 1
+Thread-0: Producer started 0
+Thread-6: Producer going to start 2
+Thread-8: Producer going to released consumer 0
+Thread-0: Producer going to released consumer 0
+Thread-8: Consumer count 1
+Thread-3: Consumer started 0
+Thread-0: Consumer count 1
+Thread-5: Consumer started 0
+Thread-3: Consumer going to released producer 0
+Thread-5: Consumer going to released producer 0
+Thread-4: Producer started 0
+Thread-4: Producer going to released consumer 0
+Thread-2: Producer started 0
+Thread-3: producer count 1
+Thread-4: Consumer count 1
+Thread-5: producer count 1
+Thread-9: Consumer started 0
+Thread-2: Producer going to released consumer 0
+Thread-9: Consumer going to released producer 0
+Thread-2: Consumer count 1
+Thread-7: Consumer started 0
+Thread-7: Consumer going to released producer 0
+Thread-9: producer count 1
+Thread-6: Producer started 0
+Thread-6: Producer going to released consumer 0
+Thread-7: producer count 1
+Thread-6: Consumer count 1
+Thread-1: Consumer started 0
+Thread-1: Consumer going to released producer 1
+Thread-1: producer count 2
+Final result 0
+```
+
+> 2. Print in order
+
+Suppose we have a class:
+
+public class Foo {
+public void first() { print("first"); }
+public void second() { print("second"); }
+public void third() { print("third"); }
+}
+The same instance of Foo will be passed to three different threads. Thread A will call first(), thread B will call
+second(), and thread C will call third(). Design a mechanism and modify the program to ensure that second() is executed
+after first(), and third() is executed after second().
+
+```java
+class Foo {
+
+    Semaphore afterFirst;
+    Semaphore afterSecond;
+
+    public Foo() {
+        afterFirst = new Semaphore(0);
+        afterSecond = new Semaphore(0);
+    }
+
+    public void first(Runnable printFirst) throws InterruptedException {
+
+        // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        afterFirst.release();
+    }
+
+    public void second(Runnable printSecond) throws InterruptedException {
+        afterFirst.acquire();
+        // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        afterSecond.release();
+    }
+
+    public void third(Runnable printThird) throws InterruptedException {
+        afterSecond.acquire();
+        // printThird.run() outputs "third". Do not change or remove this line.
+        printThird.run();
+
+    }
+}
+```
+
+```java
+public class Third implements Runnable {
+
+    Semaphore afterFirst;
+    Semaphore afterSecond;
+    Semaphore afterThird;
+
+    Third(Semaphore afterFirst, Semaphore afterSecond, Semaphore afterThird) {
+        this.afterFirst = afterFirst;
+        this.afterSecond = afterSecond;
+        this.afterThird = afterThird;
+    }
+
+    @Override
+    public void run() {
+        try {
+            afterSecond.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.print("Third");
+        System.out.println();
+        afterThird.release();
+
+    }
+}
+```
+
+```
+Output:
+FirstSecondThird
+FirstSecondThird
+FirstSecondThird
+FirstSecondThird
+FirstSecondThird
+FirstSecondThird
+```
+
+> 3. H20
+     There are two kinds of threads: oxygen and hydrogen. Your goal is to group these threads to form water molecules.
+
+There is a barrier where each thread has to wait until a complete molecule can be formed. Hydrogen and oxygen threads
+will be given releaseHydrogen and releaseOxygen methods respectively, which will allow them to pass the barrier. These
+threads should pass the barrier in groups of three, and they must immediately bond with each other to form a water
+molecule. You must guarantee that all the threads from one molecule bond before any other threads from the next molecule
+do.
+
+In other words:
+
+If an oxygen thread arrives at the barrier when no hydrogen threads are present, it must wait for two hydrogen threads.
+If a hydrogen thread arrives at the barrier when no other threads are present, it must wait for an oxygen thread and
+another hydrogen thread.
+We do not have to worry about matching the threads up explicitly; the threads do not necessarily know which other
+threads they are paired up with. The key is that threads pass the barriers in complete sets; thus, if we examine the
+sequence of threads that bind and divide them into groups of three, each group should contain one oxygen and two
+hydrogen threads.
+
+```java
+class H2O {
+    Semaphore h;
+    Semaphore o;
+
+    public H2O() {
+        h = new Semaphore(2);
+        o = new Semaphore(0);
+    }
+
+    public void hydrogen(Runnable releaseHydrogen) throws InterruptedException {
+        h.acquire();
+        // releaseHydrogen.run() outputs "H". Do not change or remove this line.
+        releaseHydrogen.run();
+        o.release();
+    }
+
+    public void oxygen(Runnable releaseOxygen) throws InterruptedException {
+        o.acquire(2);
+        // releaseOxygen.run() outputs "O". Do not change or remove this line.
+        releaseOxygen.run();
+        h.release(2);
+    }
+}
+
+```
 ## Concurrent Data structures
 
 A concurrent data structure is a particular way of storing and organizing data for access by multiple computing threads (or processes) on a computer. A shared mutable state very easily leads to problems when concurrency is involved. If access to shared mutable objects is not managed properly, applications can quickly become prone to some hard-to-detect concurrency errors.
