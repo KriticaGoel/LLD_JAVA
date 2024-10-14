@@ -1,4 +1,4 @@
 package CoreJava.Threading.ProducerConsumer.Semaphore;
 
-public class Producer {
+public class Producer implements Runnable {
 }

@@ -139,6 +139,15 @@ while (true) {
 
 ![multithreadProducerConsumer.PNG](..%2F..%2F..%2Fresources%2FmultithreadProducerConsumer.PNG)
 
+### CODE
+
+1. Producer and consumer code
+
+2. Print in order
+
+3. H20
+4.
+
 ## Concurrent Data structures
 
 A concurrent data structure is a particular way of storing and organizing data for access by multiple computing threads (or processes) on a computer. A shared mutable state very easily leads to problems when concurrency is involved. If access to shared mutable objects is not managed properly, applications can quickly become prone to some hard-to-detect concurrency errors.
