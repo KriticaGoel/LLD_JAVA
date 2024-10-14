@@ -80,7 +80,7 @@ Now only one thread will be able to access the store at one time. This will solv
 
 > Semaphore is a variable or abstract data type used to control access to a common resource by multiple threads and avoid critical section problems in a concurrent system such as a multitasking operating system. The main attribute of a semaphore is how many thread does it control. If a semaphore handles just one thread, it is effectively similar to a mutex.
 
-1. It Can be used to restrict the number of users to a particular resource or group of resources.
+1. It Can be used to restrict the number of users to a particular resource or group of Theory.resources.
 2. Unlike the lock that allows **one number of users** to a resource. Semaphore can restrict **any number of users** to a resource.
 
 #### Difference between Semaphore and Lock
@@ -113,8 +113,8 @@ Similarly, once the consumer has reduced the unit of works, it signals it to the
 1. acquire will check there is demand to run the thread.
 2. release will ask OS to notify the consumer thread that producer work is finished now they can run.
 
+![producerConsumer.PNG](..%2F..%2F..%2Fresources%2FproducerConsumer.PNG)
 
-![producerConsumer.PNG](..%2Fresources%2FproducerConsumer.PNG)
 ```java
 
 // Producer
@@ -136,8 +136,8 @@ while (true) {
     forProducer.release();
 }
 ```
-![multithreadProducerConsumer.PNG](..%2Fresources%2FmultithreadProducerConsumer.PNG)
 
+![multithreadProducerConsumer.PNG](..%2F..%2F..%2Fresources%2FmultithreadProducerConsumer.PNG)
 
 ## Concurrent Data structures
 

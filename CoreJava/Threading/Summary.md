@@ -64,6 +64,6 @@ Locking Strategy
   Fine-Grained Locking — Lock each block differently. It introduces deadlock condition.
 Deadlock
   Solved by avoiding circular wait and hold
-  Lock the resources in the same order, everywhere
+Lock the Theory.resources in the same order, everywhere
  
 

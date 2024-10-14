@@ -55,21 +55,22 @@ Heap Memory Management
 3.   Objects always stored in **HEAP**
 
 ## Resource Sharing between Threads
-What are resources?
+
+What are Theory.resources?
 * Variables
 * Any Objects
 * File or connection handles
 * Data Structure
 * Message queue
 
-Why do we need to share resources?
+Why do we need to share Theory.resources?
 
 Example text editor — one thread is handing an ui task and another thread is handling saving data at particular time.
 Both threads have common (shared) file to work and that file is stored in any DS which is shared between two threds
 
 Another common example is database—One db is shared by multiple thread to do read and write operations
 
-What is the problem in shared resources?
+What is the problem in shared Theory.resources?
 
 Increment value and decrement same value.
 
