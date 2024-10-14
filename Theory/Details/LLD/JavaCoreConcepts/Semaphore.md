@@ -1,9 +1,6 @@
 ## Agenda
 * [Producer-consumer problem](#Producer-consumer-problem)
 * [Semaphores](#Parallel-solution-Semaphore)
-* Concurrent data structures
-   * Atomic Integer
-   * Concurrent Hash Map
 
 
 ## Producer-consumer problem
