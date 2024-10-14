@@ -1,32 +1,52 @@
+# Synchronisation
 
-
+- Memory Region
+   - [Stack Memory Region](#Stack-Memory-Region)
+   - [Heap Memory Region](#Heap-Memory-Region)
+      - [Reference Variables and Objects](#Reference-Variables-and-Objects)
+- [Resource Sharing between Threads and Problem](#Resource-Sharing-between-Threads)
+   - [Race Condition](#Race-Conditions)
+   - [Data Race](#Data-Race)
+   - [Non-atomic Operations](#Non-atomic-Operations)
+   - [Added and Substractor Problem](#Increment-value-and-decrement-same-value.)
+- [Concurrency Challenges and Solutions](#Concurrency-Challenges-and-Solutions)
+   - [Mutex Locks](#Mutex)
+      - [Properties of a mutex lock](#Properties-of-a-mutex-lock)
+      - [Problem of mutex lock](#Problem-of-a-mutex-lock)
+   - [Syncronised keyword](#Synchronized)
+      - [Synchronized- Monitor](#Synchronized-Monitor)
+      - [Problem of a Synchronized - Monitor](#Problem-of-a-Synchronized-Monitor)
+   - [Synchronized-Lock](#Synchronized-Lock)
+      - [Advantage of a Synchronized-Lock](#Advantage-of-a-Synchronized-Lock)
+- [Atomic Operations](#Atomic-Operations)
+- [Concurrent Data structures](#Concurrent-Data-structures)
 ## DATA SHARING BETWEEN THREAD
 
 ### Stack Memory Region
 
-What is stack?
-Memory region where
-*     Methods are called
-*     Arguments are passed
-*     Local Variables are stored
-Stack+instruction pointer = State of each thread's execution
-![img.png](../resources/img.png)
+> **Definition**: The stack is a memory region where methods are called, arguments are passed, and local variables are
+> stored.
 
-![img_1.png](../resources/img_1.png)
+![img.png](..%2F..%2F..%2Fresources%2Fimg.png)
 
-**Stack Properties**
-1. Each stack region belongs to a particular thread
-2. All variables belong to the thread executed on that stack. other threads cannt access them.
-3. Stack is allocated Statically when a thread is created,
-4. Stack size is fixed and cannt change at run time
-5. If memory hierarchy is too deep. We may get an Stackoverflow Exception. (Risky with recursive call)
+![img_1.png](..%2F..%2F..%2Fresources%2Fimg_1.png)
+
+#### Stack Properties
+
+1. Each stack belongs to a specific thread.
+2. Local variables are not accessible by other threads
+3. Stack memory is allocated statically when a thread is created.
+4. The size of the stack is fixed and cannot change at runtime.
+5. A deep memory hierarchy can lead to a StackOverflowException, especially with recursive calls.
 
 ### Heap Memory Region
-* Shared memory region
+
+> **Definition**: The heap is a shared memory region used for dynamic memory allocation.
 
 What is allocated over heap?
 * Objects-Anything created by new operator like String, Object, collections...
-* Members of class
+* Class member variables.
+* Static variables are the class variables (remain in memory as long as the class is loaded).
 
   ```
   class MyClass {
@@ -41,39 +61,51 @@ What is allocated over heap?
          // localObject can only be used within this method
      }
   }
-* Static variables - these are class variables.
 
-Heap Memory Management
+#### Heap Memory Management
 * Managed by Garbage Collector
 * Objects stay as long as we have one reference of them.
 * Members of class exist as long as parent of class exists.
 * Static Variables—Stay Forever.
 
-**Reference Variables and Objects**
+#### Reference Variables and Objects
 1.   Reference variables are stored in **STACK**
 2.   Reference variable of class member stored in **HEAP**
 3.   Objects always stored in **HEAP**
 
 ## Resource Sharing between Threads
 
-What are Theory.resources?
-* Variables
-* Any Objects
-* File or connection handles
-* Data Structure
-* Message queue
+**Common Resources**: Variables, objects, file handles, data structures, and message queues.
 
-Why do we need to share Theory.resources?
+**Use Case**: In a text editor, one thread may handle the UI while another manages file saving, requiring access to
+shared resources.
 
-Example text editor — one thread is handing an ui task and another thread is handling saving data at particular time.
-Both threads have common (shared) file to work and that file is stored in any DS which is shared between two threds
+**Another Use Case**: Database, One db is shared by multiple thread to do read and write operations.
 
-Another common example is database—One db is shared by multiple thread to do read and write operations
+#### Problems with Shared Resources
 
-What is the problem in shared Theory.resources?
+**Race Conditions**: When multiple threads access and modify shared resources simultaneously, leading to incorrect
+results.
 
-Increment value and decrement same value.
+**Non-atomic Operations**: Operations like items++ are not atomic, as they involve multiple steps.
 
+```
+Atomic Operations
+1. Appears at once.
+2. Single step operation—all or nothing
+3. No intermediate states
+```
+
+```
+items++ is not atomic since have multiple steps
+1. Read current value
+2. Increment modify value
+3. Store modified value back to variable.
+```
+
+**Increment value and decrement same value.**
+
+```java
     public class IncrementDecrement {
 
         public static void main(String[] args) throws InterruptedException {
@@ -145,7 +177,10 @@ Increment value and decrement same value.
             }
         }
     }
-Output:
+
+```
+
+**Output**:
 
 Result of sequential threading 0
 Result of multi threading 36
@@ -155,48 +190,88 @@ Problems:
 2. Both threads are reading and modifying the counter at the same time.
 3. Operations are not atomic.
 
-
-**Atomic Operations**
-* Appears at once.
-* Single step operation—all or nothing
-* No intermediate states
-
-items++ is not atomic since have multiple steps involved in it
-1. read current value
-2. increment modify value
-3. store modified value back to variable.
-
-
-# Concurrency Challenges and Solutions
+## Concurrency Challenges and Solutions
 Below is the condition that causes synchronization problem:
-1. critical section — In case of no atomic operations, one thread can enter into a critical section, and another thread needs to wait until the first thread crosses the critical section.
-   By this way we can maintain the concurrency
-2. Race condition:
-   1. Condition when multiple threads are accessing a shared resource.
-   2. At least one thread is modifying the resource.
-   3. the timing of thread scheduling may cause an incorrect result.
-   4. The core problem is non-atomic operations performed on shared resource.
 
-3. Preemption—if thread in a critical section and cpu pause(preempted) the thread and start the another thread to work on critical section. In this case also results get wrong
-   **Critical Section**
-   In case of no atomic operations, one thread can enter into a critical section, and another thread needs to wait until the first thread crosses the critical section.
-   By this way we can maintain the concurrency
+1. **Critical Sections**: Parts of code that must be executed by only one thread at a time.
 
+2. **Race Conditions**: Occur when the timing of thread execution causes incorrect results.
+   Condition when multiple threads are accessing a shared resource.
+   At least one thread is modifying the resource.
+   the timing of thread scheduling may cause an incorrect result.
+   The core problem is non-atomic operations performed on shared resource.
 
-Problems in the above code are as follows:
-1. Two thread sharing items counter
-2. Both threads are reading and modifying the counter at the same time.
-3. Operations are not atomic.
+3. **Preemption**: A thread in a critical section can be paused, leading to inconsistencies
 
-Solutions in Java
+**Data Race**
+
+```java
+
+public class DataRace {
+
+   public static void main(String[] args) {
+      RaceCondition raceCondition = new RaceCondition();
+      Thread th = new Thread(() -> {
+         for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            raceCondition.increment();
+         }
+      });
+
+      Thread th1 = new Thread(() -> {
+         for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            raceCondition.checkForDataRace();
+         }
+      });
+
+      th.start();
+      th1.start();
+
+   }
+
+   public static class RaceCondition {
+      private int x = 0;
+      private int y = 0;
+
+      public void increment() {
+         x++;
+         y++;
+      }
+
+      public void checkForDataRace() {
+         if (y > x) {
+            System.out.println("Data Race condition exists x=" + x + " y=" + y);
+         }
+      }
+   }
+}
+
+```
+
+#### Solutions in Java
 1. Java provide locking mechanism
 2. Used to restrict the entire section or critical section to single thread at a time.
 
+#### Mutex (Mutual Exclusion)
 
-Solutions 1: **Mutex**
-Lock the critical section
-`Lock lock= new ReenteredLcok();`
-pass this lock to a critical section
+> **Definition:** A lock that restricts access to critical sections.
+
+**Implementation**: Using a lock object around critical code.
+
+```java
+Lock lock = new ReentrantLock();
+lock.
+
+lock();
+try{
+        // Critical section
+        }finally{
+        lock.
+
+unlock();
+}
+```
+
+Complete code
 
     public class Mutex {
         public static void main(String[] args) throws InterruptedException {
@@ -265,19 +340,44 @@ pass this lock to a critical section
             }
         }
     }
-Problem:
+
+#### Properties of a mutex lock:
+
+* Lock - A thread can only access the critical section if it has the lock.
+* Only one thread can have the lock at a time.
+* Other threads cannot access the critical section if a thread has the lock and thus have to wait.
+* Lock will automatically be released when the thread exits the critical section.
+
+#### Problem of a mutex lock:
 1. If developer forget to unlock the object
 2. If code throws error and object not unlocked properly
-3. Always need to put unlock in final block so that it will execute always. that means we nee try  and final block in this scenario.
+3. Always need to put unlocking in the final block so that it will execute always. that means we need to try and final
+   block in this scenario.
 
-Solutions 2: **Synchronized**
+#### Synchronized Keyword
 
-There are two ways to use Synchronized Keyword
+> There are two ways to use Synchronized Keyword
+> * Synchronized - Monitor
+> * Synchronized-Lock
+
 1. **Synchronized - Monitor**
-   One or more methods of a class using synchronized
-   ![objectLock.png](..%2Fresources%2FobjectLock.png)
-   ```
-   public class ABC{
+
+> **Definition**:Locks entire methods, preventing access by other threads.
+
+```java
+public synchronized void method() {
+   // Critical section
+}
+```
+
+![objectLock.png](..%2F..%2F..%2Fresources%2FobjectLock.png)
+
+#### Problem of a Synchronized - Monitor:
+
+If thread A accessing method 1 then thread B cannt access any method of that class as both methods are locked.
+
+```java
+ public class ABC {
         public synchronized method1(){
         .....
         }
@@ -286,9 +386,11 @@ There are two ways to use Synchronized Keyword
         .....
         }
     }
-Problem:
-If thread A accessing method 1 then thread B cannt access any method of that class as both methods are locked.
+```
 
+Complete code
+
+```java
     public class Monitor {
 
         public static void main(String[] args) throws InterruptedException {
@@ -351,29 +453,32 @@ If thread A accessing method 1 then thread B cannt access any method of that cla
         }
     }
 
+```
+
 2. **Synchronized-Lock**
-   Lock the critical section not complete method.
 
-   Advantage:
-    1. Two threads can access two different methods having a critical section without blocking all methods which we are doing in the previous case.
-    2. We are locking critical code only rest code can be accessed by muti threads
-    3. Increase performance.
-       ![2.jpg](..%2Fresources%2F2.jpg)![3.jpg](..%2Fresources%2F3.jpg)
-       Syntax:
+> **Definition**: Locks specific sections of code, allowing other methods to run concurrently.
 
-
-    Object lockingObject = new Object();
-    public void method{
-        .....
-        ......
-        synchronized(lockingObject){
-        //critical section
+```java
+Object lock = new Object();
+synchronized (lock){
+        // Critical section
         }
-        ....
-        ....
-    }
+```
 
-package CoreJava.Threading.ResourceSharing;
+#### Advantage of a Synchronized-Lock:
+
+* Two threads can access two different methods having a critical section without blocking all methods which we are doing
+  in the previous case.
+* We are locking critical code only rest code can be accessed by muti threads
+* Increase performance.
+
+  ![2.jpg](..%2F..%2F..%2Fresources%2F2.jpg)
+  ![3.jpg](..%2F..%2F..%2Fresources%2F3.jpg)
+
+Complete code:
+
+```java
 
     public class Lock {
 
@@ -440,7 +545,10 @@ package CoreJava.Threading.ResourceSharing;
             }
         }
     }
-![img.png](../resources/objectLock.png)
+
+```
+
+![objectLock.png](..%2F..%2F..%2Fresources%2FobjectLock.png)
 
 **Atomic Operations**
 1. All assignments are atomic.
@@ -449,16 +557,19 @@ package CoreJava.Threading.ResourceSharing;
 4. Double and long also became atomic after declaring a volatile keyword
    volatile double x=1.0;
 5. We have Atomic Datatype like Atomic Integer. that means operation happend on this function are atomic in nature and much faster
- `  AtomicInteger counter = new AtomicInteger(0);
+
+```java
+AtomicInteger counter = new AtomicInteger(0);
 
 public void increment() {
 counter.incrementAndGet();
 }
-`
+```
+
 6. Atomic use case Implement Metric
 
-
-    public class Atomic {
+```java
+public class Atomic {
 
         public static void main(String[] args) {
             Metric metric = new Metric();
@@ -529,47 +640,21 @@ counter.incrementAndGet();
         }
     }
 
+```
 Use case
 A stock trading application that keeps track of the minimum and maximum price of the stock daily.
 
+## Concurrent Data structures
 
-**Data Race**
+A concurrent data structure is a particular way of storing and organizing data for access by multiple computing
+threads (or processes) on a computer. A shared mutable state very easily leads to problems when concurrency is involved.
+If access to shared mutable objects is not managed properly, applications can quickly become prone to some
+hard-to-detect concurrency errors.
 
+Some common concurrent data structures:
 
-    public class DataRace {
+1. [Atomic Integer](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicInteger.html#:~:text=An%20AtomicInteger%20is%20used%20in,deal%20with%20numerically%2Dbased%20classes)
+   > The AtomicInteger class protects an underlying int value by providing methods that perform atomic operations on the
+   value
+2. [Concurrent hash maps](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html)
 
-        public static void main(String[] args) {
-           RaceCondition raceCondition = new RaceCondition();
-           Thread th = new Thread(() -> {
-               for(int i=0;i<Integer.MAX_VALUE;i++){
-                   raceCondition.increment();
-               }
-           });
-    
-           Thread th1 = new Thread(() -> {
-               for(int i=0;i<Integer.MAX_VALUE;i++){
-                   raceCondition.checkForDataRace();
-               }
-           });
-    
-           th.start();
-           th1.start();
-    
-        }
-    
-        public static class RaceCondition{
-            private int x=0;
-            private int y=0;
-    
-            public void increment(){
-                x++;
-                y++;
-            }
-    
-            public void checkForDataRace(){
-                if(y>x){
-                    System.out.println("Data Race condition exists x="+x+" y="+y);
-                }
-            }
-        }
-    }
