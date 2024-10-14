@@ -14,7 +14,7 @@
       - [Properties of a mutex lock](#Properties-of-a-mutex-lock)
       - [Problem of mutex lock](#Problem-of-a-mutex-lock)
   - [Syncronized keyword](#Synchronized-Keyword)
-      - [Synchronized- Monitor](#Synchronized-Monitor)
+      - [Synchronized- Monitor](#Synchronized—Monitor)
      - [Problem of a Synchronized - Monitor](#problem-of-a-synchronized---monitor)
    - [Synchronized-Lock](#Synchronized-Lock)
       - [Advantage of a Synchronized-Lock](#Advantage-of-a-Synchronized-Lock)
@@ -360,7 +360,7 @@ Complete code
 > * Synchronized - Monitor
 > * Synchronized-Lock
 
-1. **Synchronized - Monitor**
+1. ##### Synchronized—Monitor
 
 > **Definition**:Locks entire methods, preventing access by other threads.
 
