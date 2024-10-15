@@ -3,8 +3,12 @@
     - [Threads](#threads)
         - [Thread vs Process](#thread-vs-process)
         - [Concurrency vs Parallelism](#concurrency-vs-parallelism)
-        - [Using threads in Java](#using-threads-in-java)
-            - [Number printer](#number-printer)
+      - [Context Switching](#context-switching)
+      - [Implementing Runnable Interface](#implementing-runnable-interface)
+      - [Extending Thread Class](#extending-thread-class)
+      - [Thread Interruption](#thread-interruption)
+      - [Daemon Threads](#daemon-threads)
+      - [Join Thread / Thread Coordination](#join-thread-/-thread-coordination)
     - [Executor](#executor)
     - [Callable and Future](#callable-and-future)
     - [Assignment](#assignment)
@@ -23,7 +27,7 @@ Threads are used to solve this problem. Threads are used to perform multiple tas
 Thread is a sequential flow of tasks within a process. Threads in OS can be of the same or different types. Threads are used to increase the performance of the applications.
 Each thread has its own program counter, stack, and set of registers. But the threads of a single process might share
 the same code and data/file. Threads are also termed as lightweight processes as they share common Theory.resources.
-![Thread.PNG](..%2F..%2Fresources%2FThread.PNG)
+![Thread.PNG](..%2F..%2F..%2Fresources%2FThread.PNG)
 ### Thread vs Process
 | Process                                                                                 | Thread                                                                                                     |
 |-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
@@ -34,7 +38,8 @@ the same code and data/file. Threads are also termed as lightweight processes as
 | Context Switching in processes is slower.                                               | Context switching in threads is faster.                                                                    |
 | Processes are independent of each other.                                                | Threads, on the other hand, are interdependent. (i.e they can read, write or change another thread’s data) |
 | Eg: Opening two different browsers.                                                     | Eg: Opening two tabs in the same browser.                                                                  
-![threadProcess.PNG](..%2F..%2Fresources%2FthreadProcess.PNG)
+
+![threadProcess.PNG](..%2F..%2F..%2Fresources%2FthreadProcess.PNG)
 
 ### Concurrency vs Parallelism
 
@@ -49,9 +54,9 @@ the same code and data/file. Threads are also termed as lightweight processes as
 
 **Cost Implications**: It is generally more expensive to switch between threads of different processes (inter-process switching) than between threads of the same process (intra-process switching). This is because switching between different processes requires additional overhead, such as switching memory contexts.
 
-### Multithreading Implementation
+## Multithreading Implementation
 
-1. Implementing Runnable Interface
+### 1. Implementing Runnable Interface
 
 ```java
 public class MyRunnable implements Runnable {
@@ -60,7 +65,19 @@ public class MyRunnable implements Runnable {
  }
 }
 ```
-2. Extending Thread Class
+
+```java
+Thread thread2 = new Thread(new Runnable() {
+    public void run() {
+        System.out.println("Third thread");
+    }
+});
+thread2.
+
+start();
+```
+
+### 2. Extending Thread Class
 ```java
 public class MyThread extends Thread {
     public void run() {
@@ -127,32 +144,142 @@ public class SecuritySystem {
 }
 ```
 
-**Interrupt**
-Thread A can interrupt thread B, or we can stop long-running thread through interrupt
+### 3. Thread Interruption
 
-To check whether anyone called thread to interrupt
-**if(Thread.currentThread().isInterrupted()){}**
+> To interrupt a thread (e.g., to stop a long-running task), you can use the
+> interrupt() method. The interrupted thread can check its interrupted status using
 
-**Damon Thread**
-Background threads that do not prevent the application from existing if the main thread terminates
+To check whether anyone called thread to interrupt return boolean
 
-When to use Damon Thread
+```java
+Thread.currentThread().
 
-1.Background task that should not block our application to terminate. For Example File saving in text editor
-2.Code in worker thread is not in our control, and we don't want it to block our applcoation from terminate. For example Third part libraries.
+isInterrupted()
+```
 
-**Join Thread / Thread coordination**
-Make sure dependent thread completes the work before another thread starts
+### 4. Daemon Threads
 
-Implementation
+> Daemon threads are background threads that don't prevent the JVM from exiting when the main thread terminates. This
+> makes them ideal for tasks that should run in the background without blocking the application from closing.
 
-1. Result print in FactorialThread
-2. How to read variable of threaded class in another class using thread
-   FactorialThread factorial = (FactorialThread) threads.get(i);
-3. Implement isFinished to print value if finished
-  **Problem**: this introduces race condition since start method starting thread and finished method trying to print as soon as possible
-4. To remove race condition, we added join
-    thread.join() this makes thread dependent on each other.
-    **Problem**: if one thread is taking more than expected time, then the main thread will keep on waiting
-5. How long we are willing to wait for each thread to complete the task
-     thread.join(2000);//time is in milliseconds
+```java
+Thread daemonThread = new Thread(new MyRunnable());
+daemonThread.
+
+setDaemon(true);
+daemonThread.
+
+start();
+```
+
+#### When to use Damon Thread
+
+1. **Background Tasks**: Such as file-saving operations in a text editor, where you want to save user data without
+   interrupting the user experience.
+2. **Third-party Libraries**: When using external libraries that spawn threads, you may want these to run in the
+   background without blocking your application.
+
+```java
+class BackgroundTask extends Thread {
+    public void run() {
+        // Background operation
+        while (true) {
+            System.out.println("Running in background...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+}
+
+public class DaemonExample {
+    public static void main(String[] args) {
+        BackgroundTask task = new BackgroundTask();
+        task.setDaemon(true); // Set as daemon thread
+        task.start();
+
+        // Main thread logic
+        System.out.println("Main thread is finishing.");
+    }
+}
+```
+
+**Problems** :
+This approach can introduce a race condition since the start method begins the thread while the finished method may try
+to print results prematurely.
+
+**Solution** :
+Using join(): By calling thread.join(), you ensure the main thread waits for the worker thread to finish. However, it
+can lead to potential issues if the worker takes too long.
+
+### 5.Join Thread / Thread Coordination
+
+> Using join() allows you to wait for a thread to complete its execution before proceeding. This is essential for
+> managing dependencies between threads.
+
+**Implementation Steps**
+
+1. Print Results in a Worker Thread: A thread can perform a task, like calculating a factorial.
+2. Access Thread Variables: You can retrieve results from a thread instance by storing references
+3. Race Conditions: If the main thread tries to access results before the worker thread finishes, it may lead to
+   inconsistencies.
+4. Implement an isFinished method to check and print values once finished.
+
+**Problem with join**
+If one thread takes longer than expected, the main thread will wait indefinitely.
+
+**Solution**
+Timeout with join(): You can specify a timeout to avoid indefinite waiting.
+
+```java
+class FactorialThread extends Thread {
+    private int number;
+    private long result;
+
+    public FactorialThread(int number) {
+        this.number = number;
+    }
+
+    public void run() {
+        result = factorial(number);
+    }
+
+    public long getResult() {
+        return result;
+    }
+
+    public boolean isFinished() {
+        return this.getState() == State.TERMINATED;
+    }
+
+    private long factorial(int n) {
+        if (n == 0) return 1;
+        long fact = 1;
+        for (int i = 1; i <= n; i++) {
+            fact *= i;
+        }
+        return fact;
+    }
+}
+
+public class ThreadCoordinationExample {
+    public static void main(String[] args) {
+        FactorialThread factorialThread = new FactorialThread(5);
+        factorialThread.start();
+
+        try {
+            factorialThread.join(2000); // Wait up to 2000 ms for the thread to finish
+            if (factorialThread.isFinished()) {
+                System.out.println("Factorial: " + factorialThread.getResult());
+            } else {
+                System.out.println("Thread took too long to finish.");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
