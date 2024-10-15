@@ -4,11 +4,11 @@
         - [Thread vs Process](#thread-vs-process)
         - [Concurrency vs Parallelism](#concurrency-vs-parallelism)
       - [Context Switching](#context-switching)
-      - [Implementing Runnable Interface](#implementing-runnable-interface)
-      - [Extending Thread Class](#extending-thread-class)
-      - [Thread Interruption](#thread-interruption)
-      - [Daemon Threads](#daemon-threads)
-      - [Join Thread / Thread Coordination](#join-thread-/-thread-coordination)
+      - [Implementing Runnable Interface](#1-implementing-runnable-interface)
+      - [Extending Thread Class](#2-extending-thread-class)
+      - [Thread Interruption](#3-thread-interruption)
+      - [Daemon Threads](#4-daemon-threads)
+      - [Join Thread / Thread Coordination](#5join-thread--thread-coordination)
     - [Executor](#executor)
     - [Callable and Future](#callable-and-future)
     - [Assignment](#assignment)
@@ -46,8 +46,7 @@ the same code and data/file. Threads are also termed as lightweight processes as
 * Concurrent - At the same time, **but not necessarily at the same instant**. It is possible for multiple threads to be at different stages of execution at the same time **but not being processed together**. A single core CPU can only execute one thread at a time. But it can switch between threads very quickly. This is called context switching. This is how concurrency is achieved. A single core CPU can have concurrency but not parallelism.
 * Parallel - At the same time and **at the same instant**. It is possible for multiple threads to be at different stages of execution at the same time and **being processed together**. A single core CPU cannot achieve parallelism. It can only achieve concurrency. A multi-core CPU can achieve both concurrency and parallelism.
 
-
-
+###### [Home](#threads-and-multithreading)
 ###  Context Switching
 
 **Definition**: Context switching refers to the process of storing the state of a currently running thread or process, so that it can be resumed later, and restoring the state of the next thread or process to run.
@@ -283,3 +282,4 @@ public class ThreadCoordinationExample {
 }
 ```
 
+###### [Home](#threads-and-multithreading)
