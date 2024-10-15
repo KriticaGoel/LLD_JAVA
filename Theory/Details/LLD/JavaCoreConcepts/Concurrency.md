@@ -20,6 +20,8 @@
        - [Advantage of a Synchronized-Lock](#advantage-of-a-synchronized-lock)
 - [Atomic Operations](#atomic-operations)
 - [Concurrent Data structures](#concurrent-data-structures)
+- [HashMap Vs HashTable Vs ConcurrentHashMap](#HashMap-Vs-HashTable-Vs-ConcurrentHashMap)
+- [String Vs String Builder Vs String Buffer](#string-vs-string-builder-vs-string-buffer)
 ## DATA SHARING BETWEEN THREAD
 
 ### Stack Memory Region
@@ -556,7 +558,8 @@ Complete code:
 3. All primitive types are atomic except double and long.
 4. Double and long also became atomic after declaring a volatile keyword
    volatile double x=1.0;
-5. We have Atomic Datatype like Atomic Integer. that means operation happend on this function are atomic in nature and much faster
+5. We have Atomic Datatype like Atomic Integer. that means operation happen on this function are atomic in nature and
+   much faster
 
 ```java
 AtomicInteger counter = new AtomicInteger(0);
@@ -656,5 +659,109 @@ Some common concurrent data structures:
 1. [Atomic Integer](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicInteger.html#:~:text=An%20AtomicInteger%20is%20used%20in,deal%20with%20numerically%2Dbased%20classes)
    > The AtomicInteger class protects an underlying int value by providing methods that perform atomic operations on the
    value
-2. [Concurrent hash maps](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.html)
+2. Concurrency
 
+### HashMap Vs HashTable Vs ConcurrentHashMap
+
+| **HashMap**      | **HashTable**                                        | **ConcurrentHashMap**                                                                                                                                      |
+|------------------|------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Not Thread Safe  | Thread Safe                                          | Thread Safe                                                                                                                                                |                           
+| Not synchronized | Synchronized                                         | Synchronized                                                                                                                                               |
+| NA               | Every read/write operation needs to acquire the lock | There is no locking at the object level<br/>It never locks the whole Map, instead, it divides the map into segments and locking is done on these segments. |
+
+### String Vs String Builder Vs String Buffer
+
+| String -Immutable text or when modifications are rare.                                                                                                   | StringBuilder - Mutable strings in single-threaded contexts for better performance.                                                                                | StringBuffer - When you need a mutable string and require thread safety.                                             |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| **Immutability** :String objects are immutable, meaning once created, their values cannot be changed. Any modification results in a new String object.   | **Mutability**: StringBuilder is mutable, allowing modifications without creating new objects.                                                                     | **Mutability**: Like StringBuilder, StringBuffer is mutable and allows for modifications.                            |                           
+| **Performance**: Due to immutability, frequent modifications (like concatenations) can lead to performance issues, as new objects are created each time. | **Performance**: More efficient than String for concatenations and modifications, especially in loops or when dealing with large amounts of data.                  | **Performance**: Generally slower than StringBuilder because it is synchronized for thread safety                    |
+| Not Thread Safe                                                                                                                                          | **Thread Safety**: Not synchronized, meaning it's not thread-safe. Use it in single-threaded environments or when you don't need to worry about concurrent access. | **Thread Safety**: Synchronized, making it thread-safe. This means it's safe to use in a multi-threaded environment. |
+| **Usage**: Best for situations where you have fixed strings or are performing a limited number of modifications.                                         | **Usage**: Ideal for scenarios where you need to build or modify strings dynamically in a single thread.                                                           | **Usage**: Best when you need to modify strings in a multi-threaded context                                          |
+
+### LinkedQueue Vs ConcurrentLinkedQueue
+
+| **LinkedQueue** - When you need a simple, non-thread-safe queue implementation                                                                                                     | **ConcurrentLinkedQueue**- When you require a thread-safe, high-performance queue suitable for concurrent applications.                                                                   |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Implementation**: Generally refers to a standard linked list-based implementation of a queue (not part of the Java standard library, but a common concept).                      | **Implementation**: Part of the Java Collections Framework, specifically in the java.util.concurrent package.                                                                             |                           
+| **Thread Safety**: Not thread-safe. If multiple threads access a LinkedQueue concurrently without external synchronization, it can lead to inconsistent states or data corruption. | **Thread Safety**: Designed for concurrent access. It uses lock-free algorithms to ensure thread safety, allowing multiple threads to perform operations simultaneously without blocking. |
+| **Performance**: Typically performs well for single-threaded applications where you need a simple queue structure with FIFO (First-In-First-Out) behavior.                         | **Performance**: Generally provides better performance in multi-threaded environments compared to other synchronized queues due to its non-blocking nature.                               |                                                                                                                                                                                   |                                                                                                                                                                                               |
+| **Usage**: Suitable for applications where concurrency is not a concern.                                                                                                           | **Usage**: Ideal for high-concurrency applications where multiple threads need to enqueue and dequeue items safely.                                                                       |
+
+### DeadLock
+
+To prevent or resolve deadlocks, consider the following strategies:
+
+1. **Avoid Nested Locks**—Minimize the use of nested locks. If possible, avoid acquiring multiple locks at the same
+   time.
+2. **Lock Ordering**—Always acquire locks in a consistent order. If every thread acquires locks in the same order,
+   deadlocks can be avoided.
+
+```java
+class Resource {
+    private final Object lock1 = new Object();
+    private final Object lock2 = new Object();
+
+    public void method1() {
+        synchronized (lock1) {
+            synchronized (lock2) {
+                // critical section
+            }
+        }
+    }
+
+    public void method2() {
+        synchronized (lock1) {
+            synchronized (lock2) {
+                // critical section
+            }
+        }
+    }
+}
+```
+
+In this example, both methods acquire lock1 before lock2, thus preventing deadlocks.
+
+3. **Use Timeout**—When attempting to acquire a lock, use a timeout mechanism. If a thread cannot acquire the lock
+   within a specified time, it should back off and try again later.
+
+```java
+if(lock.tryLock(timeout, TimeUnit.SECONDS)){
+        try{
+        // critical section
+        }finally{
+        lock.
+
+unlock();
+    }
+            }
+```
+
+4. **Use Higher-Level Concurrency Utilities**-Utilize higher-level constructs from the java.util.concurrent package,
+   such as ReentrantLock, Semaphore, or CountDownLatch, which provide more control over locking mechanisms.
+5. **Deadlock Detection**-Implement a mechanism to detect deadlocks. This can involve periodically checking the state of
+   the threads and resources to identify potential deadlocks.
+
+```java
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+
+public class DeadlockDetector {
+    private final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+
+    public void checkForDeadlock() {
+        long[] deadlockedThreads = threadMXBean.findDeadlockedThreads();
+        if (deadlockedThreads != null) {
+            for (long threadId : deadlockedThreads) {
+                ThreadInfo threadInfo = threadMXBean.getThreadInfo(threadId);
+                System.out.println("Deadlock detected: " + threadInfo.getThreadName());
+            }
+        }
+    }
+}
+```
+
+6. **Reduce Lock Scope**-Limit the scope of locks. Lock only the necessary part of the code, which can reduce the
+   chances of deadlocks.
+7. **Thread Dump Analysis**-If a deadlock occurs, analyze thread dumps to understand the state of each thread and
+   identify which resources are held and which are being waited on. This can help in diagnosing and fixing the deadlock.
