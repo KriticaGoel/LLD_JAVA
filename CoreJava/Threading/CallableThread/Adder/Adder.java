@@ -1,4 +1,4 @@
-package CoreJava.Threading.CallableThread;
+package CoreJava.Threading.CallableThread.Adder;
 
 import java.util.concurrent.Callable;
 

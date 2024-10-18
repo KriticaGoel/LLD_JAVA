@@ -1,0 +1,8 @@
+package CoreJava.Generics.Assignment.First;
+
+public class Main {
+    public static void main(String[] args) {
+        Point point = new Point(1, 2);
+
+    }
+}
