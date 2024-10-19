@@ -2,6 +2,7 @@ package CoreJava.Collections;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 public class ListClass {
 
@@ -22,7 +23,7 @@ public class ListClass {
 
 
         listInteger.addAll(new ArrayList<Integer>(listInteger1));
-//        listInteger.addAll(2,new ArrayList<Integer>(listInteger1));
+        listInteger.addAll(2, new ArrayList<Integer>(listInteger1));
 
         Integer abc = listInteger.set(1, 20);//override previous element and return it
         System.out.println("Old value at index 1 is " + abc);
@@ -53,6 +54,11 @@ public class ListClass {
         System.out.println(integers.subList(3, 6));
         System.out.println(integers.reversed());
         System.out.println(List.of(1, 2, 3, 4, 5, 6));
+
+        UnaryOperator<Integer> operator = x -> x * 2;
+        System.out.println(operator.apply(8));
+
+
 
     }
 }
