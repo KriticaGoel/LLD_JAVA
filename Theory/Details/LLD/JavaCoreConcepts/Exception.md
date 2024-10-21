@@ -9,6 +9,7 @@ Agenda
     * [finally keyword](#finally-keyword)
       [Comparison of Final, Finally, Finalize](#comparison-of-final-finally-finalize)
       [The golden Rules of Exception Handling](#the-golden-rules-of-exception-handling)
+      [Custom Exception](#custom-exception)
 
 ![Exception.png](..%2F..%2F..%2Fresources%2FException.png)
 
@@ -143,5 +144,25 @@ println("Error: "+e.getMessage());
 
 public void doSomething() throws Exception {
     // do something
+}
+```
+
+### Custom Exception
+
+```java
+public class MyException extends RuntimeException {
+    public MyException(String message) {
+        super(message);
+    }
+}
+
+
+public static void getPlayerScore(String playerFile) {
+    if (playerFile == null || playerFile.isEmpty()) {
+        //throwing custom exception
+        //throw new IllegalArgumentException("Player file cannot be null");
+        throw new MyException("Player file cannot be null");
+    }
+    System.out.println(playerFile);
 }
 ```

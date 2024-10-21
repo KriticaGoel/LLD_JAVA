@@ -188,13 +188,16 @@ public class ListClass {
     Dynamic arrays -It is a thread-safe class.This is not recommended being used in a single-threaded environment as it might cause extra overheads
 
 ### LinkedList
+
     LinkedList is class is an implementation of a doubly-linked list data structure
 
 ### Stack
+
     Stack is a class is based on the basic principle of last-in-first-out. This is a legacy class. This inherits from a Vector class. It is also a thread-safe class. This is not recommended being used in a single-threaded environment as it might cause extra overheads. However, to overcome this in Vectors place one can readily use ArrayDeque.
 
 ## SET
 
-### HashSet 
+### HashSet
+
     HashSet is an inherent implementation of the hash table data structure or Hashing. The objects that we insert into the HashSet do not guarantee to be inserted in the same order. The objects are inserted based on their hash code.
 
