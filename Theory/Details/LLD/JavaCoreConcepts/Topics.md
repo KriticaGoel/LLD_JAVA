@@ -43,9 +43,9 @@
         * Futures
         * Volatile keyword
 * **Synchronization**
-    * Synchronization Issue (Adder / Subtractor Example)
+    * Synchronization Issue (Adder / Subtract Example)
     * Reasons of Issue
-    * Properties of Best solution
+    * Properties of a Best solution
     * Mutex
     * Synchronized keyword
     * Synchronized methods
@@ -56,13 +56,23 @@
     * Collection framework
     * Hierarchy of Collection Framework
         * List
+            * ArrayList
+            * LinkedList
+            * Vector
         * Set
+            * HashSet
+            * LinkedHashSet
+            * TreeSet
+            * SortedSet
         * Queue
-    * HashSet vs HashMap
-    * TreeMap
-    * LinkedHashMap
-    * Vector
-    * ConcurrentHashmap
+            * PriorityQueue
+            * Dequeue
+            * ArrayDequeue
+  * Map
+      * HashSet vs HashMap
+      * TreeMap
+      * LinkedHashMap
+      * ConcurrentHashmap
 * **Generics**
 * **Function Interface**
 * **Lambda Functions**
@@ -71,6 +81,11 @@
     * Parallel Streams
 * **Functional Programming using Java**
 * **Exception Handling**
+    * throw,throws,try-catch,finally,custom Exception
 * **Strings in Java**
 * **Garbage collection**
 * **Memory Management in Java**
+
+* Difference between final, finalize, finally
+* Difference between abstract and interface
+* Difference between string, string buffer, string builder
