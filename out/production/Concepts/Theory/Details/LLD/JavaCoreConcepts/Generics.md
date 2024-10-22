@@ -1,10 +1,10 @@
 ## Agenda
 
-[Generics](#Generics)
-[Generic Method](#generic-method)
-[Generic Static Method](#generic-static-method)
-[Extends keyword in Generics](#extends-keyword-in-generics)
-[Function Interface](#function-interface)
+* [Generics](#Generics)
+* [Generic Method](#generic-method)
+* [Generic Static Method](#generic-static-method)
+* [Extends keyword in Generics](#extends-keyword-in-generics)
+* [Function Interface](#function-interface)
 
 **Before Generics**:
 If we are storing any value a variable and using it in multiple ways, then at compile time compiler will not validate
