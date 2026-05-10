@@ -3,7 +3,7 @@ package solid.srp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SRPViolet {
+public class SRPViolation {
 
     public static void main(String[] args) {
         Product product1 = new Product("Pizza",500.00);
