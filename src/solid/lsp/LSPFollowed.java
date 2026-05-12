@@ -1,6 +1,5 @@
-package solid.LSP;
+package solid.lsp;
 
-import java.util.List;
 import java.util.Optional;
 
 public class LSPFollowed {

@@ -1,4 +1,4 @@
-package solid.LSP;
+package solid.lsp;
 
 import java.util.List;
 
