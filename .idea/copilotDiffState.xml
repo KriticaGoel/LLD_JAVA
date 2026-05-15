@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/main_product_demo.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/main_product_demo.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Main Demo - calling repository methods to add and retrieve products.&#10;&quot;&quot;&quot;&#10;&#10;from srp_product_repository import SrpProductRepository&#10;&#10;&#10;def main():&#10;    &quot;&quot;&quot;&#10;    Main method demonstrates adding products and retrieving the list.&#10;    &quot;&quot;&quot;&#10;    # Create a product repository&#10;    repository = SrpProductRepository()&#10;&#10;    # Add products by providing details (name and price)&#10;    repository.add_product(&quot;Pizza&quot;, 500.00)&#10;    repository.add_product(&quot;Burger&quot;, 300.00)&#10;    repository.add_product(&quot;Pasta&quot;, 400.00)&#10;    repository.add_product(&quot;Salad&quot;, 250.00)&#10;    repository.add_product(&quot;Coffee&quot;, 100.00)&#10;&#10;    # Display all products&#10;    repository.display_products()&#10;&#10;    # Get the products list and work with it&#10;    products_list = repository.get_products()&#10;    print(f&quot;\nTotal products: {repository.get_product_count()}&quot;)&#10;&#10;    # Calculate total value&#10;    total_value = sum(product.get_price() for product in products_list)&#10;    print(f&quot;Total Inventory Value: ${total_value}&quot;)&#10;&#10;    # Filter and display expensive products&#10;    expensive = [p for p in products_list if p.get_price() &gt; 300]&#10;    print(f&quot;\nProducts over $300: {len(expensive)}&quot;)&#10;    for product in expensive:&#10;        print(f&quot;  - {product.get_name()}: ${product.get_price()}&quot;)&#10;&#10;&#10;if __name__ == &quot;__main__&quot;:&#10;    main()&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/product_list_example.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/product_list_example.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Example: Creating a list of SrpProduct objects in Python.&#10;&quot;&quot;&quot;&#10;&#10;from srp_product import SrpProduct&#10;&#10;&#10;def main():&#10;    &quot;&quot;&quot;&#10;    Demonstrate creating and managing a list of products.&#10;    &quot;&quot;&quot;&#10;    # Create a list of products&#10;    products = [&#10;        SrpProduct(&quot;Pizza&quot;, 500.00),&#10;        SrpProduct(&quot;Burger&quot;, 300.00),&#10;        SrpProduct(&quot;Pasta&quot;, 400.00),&#10;        SrpProduct(&quot;Salad&quot;, 250.00),&#10;        SrpProduct(&quot;Coffee&quot;, 100.00),&#10;    ]&#10;&#10;    # Display all products&#10;    print(&quot;=== Product List ===&quot;)&#10;    for i, product in enumerate(products, 1):&#10;        print(f&quot;{i}. {product.get_name()} - ${product.get_price()}&quot;)&#10;&#10;    # Calculate total inventory value&#10;    total_value = sum(product.get_price() for product in products)&#10;    print(f&quot;\nTotal Inventory Value: ${total_value}&quot;)&#10;&#10;    # Filter products by price&#10;    expensive_products = [p for p in products if p.get_price() &gt; 300]&#10;    print(f&quot;\nProducts over $300: {len(expensive_products)}&quot;)&#10;    for product in expensive_products:&#10;        print(f&quot;  - {product.get_name()}: ${product.get_price()}&quot;)&#10;&#10;&#10;if __name__ == &quot;__main__&quot;:&#10;    main()&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_cart_item.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_cart_item.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Cart item - single responsibility: represent a product in the cart with its discount.&#10;&quot;&quot;&quot;&#10;&#10;from srp_product import SrpProduct&#10;&#10;&#10;class SrpCartItem:&#10;    def __init__(self, product: SrpProduct, discount_amount: float):&#10;        self.product = product&#10;        self.discount_amount = discount_amount&#10;&#10;    def get_product(self) -&gt; SrpProduct:&#10;        return self.product&#10;&#10;    def get_discount_amount(self) -&gt; float:&#10;        return self.discount_amount&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_data_manager.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_data_manager.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Data manager - single responsibility: persist data to storage.&#10;&quot;&quot;&quot;&#10;&#10;from typing import List&#10;from srp_product import SrpProduct&#10;&#10;&#10;class SrpDataManager:&#10;    def save_db(self, products: List[SrpProduct]) -&gt; None:&#10;        &quot;&quot;&quot;&#10;        Save products to the database.&#10;        &quot;&quot;&quot;&#10;        for product in products:&#10;            print(f&quot;Saving database... {product.get_price()}&quot;)&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_demo.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_demo.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;SRP Demo - orchestrator that demonstrates strict Single Responsibility Principle.&#10;This is the main entry point showing how each class has only one reason to change.&#10;&quot;&quot;&quot;&#10;&#10;from srp_product import SrpProduct&#10;from srp_discount_engine import SrpDiscountEngine&#10;from srp_shopping_cart import SrpShoppingCart&#10;from srp_cart_item import SrpCartItem&#10;from srp_inventory_adjustment import SrpInventoryAdjustment&#10;from srp_cart_pricing_service import SrpCartPricingService&#10;from srp_data_manager import SrpDataManager&#10;&#10;&#10;def main():&#10;    &quot;&quot;&quot;&#10;    Main orchestrator - coordinates different services.&#10;    Note: This class is an orchestrator, so it's not a strict SRP class,&#10;    but the individual services it uses follow SRP strictly.&#10;    &quot;&quot;&quot;&#10;    # Create products&#10;    product1 = SrpProduct(&quot;Pizza&quot;, 500.00)&#10;    product2 = SrpProduct(&quot;Burger&quot;, 300.00)&#10;&#10;    # Calculate discounts&#10;    discount_engine = SrpDiscountEngine()&#10;    discount1 = discount_engine.calculate_discount_amount(product1)&#10;    discount2 = discount_engine.calculate_discount_amount(product2)&#10;&#10;    # Build shopping cart&#10;    cart = SrpShoppingCart()&#10;    cart.add_item(SrpCartItem(product1, discount1))&#10;    cart.add_item(SrpCartItem(product2, discount2))&#10;&#10;    # Update inventory&#10;    inventory = SrpInventoryAdjustment()&#10;    inventory.update_available_qty(product1)&#10;    inventory.update_available_qty(product2)&#10;&#10;    # Calculate total price&#10;    pricing_service = SrpCartPricingService()&#10;    total_price = pricing_service.calculate_total(cart.get_items())&#10;    print(f&quot;Total price is {total_price}&quot;)&#10;&#10;    # Save to database&#10;    data_manager = SrpDataManager()&#10;    data_manager.save_db([product1, product2])&#10;&#10;&#10;if __name__ == &quot;__main__&quot;:&#10;    main()&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_discount_engine.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_discount_engine.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Discount calculation - single responsibility: calculate discount amounts.&#10;&quot;&quot;&quot;&#10;&#10;from srp_product import SrpProduct&#10;&#10;&#10;class SrpDiscountEngine:&#10;    def calculate_discount_amount(self, product: SrpProduct) -&gt; float:&#10;        &quot;&quot;&quot;&#10;        Calculate discount for a product without mutating it.&#10;        &quot;&quot;&quot;&#10;        discount = product.get_price() * 0.1&#10;        print(f&quot;Discount for {product.get_name()} is {discount}&quot;)&#10;        return discount&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_inventory_adjustment.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_inventory_adjustment.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Inventory adjustment - single responsibility: manage inventory updates.&#10;&quot;&quot;&quot;&#10;&#10;from srp_product import SrpProduct&#10;&#10;&#10;class SrpInventoryAdjustment:&#10;    def update_available_qty(self, product: SrpProduct) -&gt; None:&#10;        &quot;&quot;&quot;&#10;        Update available quantity for a product.&#10;        &quot;&quot;&quot;&#10;        print(f&quot;Update Available Qty for {product.get_name()}&quot;)&#10;&#10;    def update_reserved_qty(self, product: SrpProduct) -&gt; None:&#10;        &quot;&quot;&quot;&#10;        Update reserved quantity for a product.&#10;        &quot;&quot;&quot;&#10;        print(f&quot;Update Reserved Qty for {product.get_name()}&quot;)&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_product.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_product.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Product domain model - single responsibility: hold product data.&#10;&quot;&quot;&quot;&#10;&#10;&#10;class SrpProduct:&#10;    def __init__(self, name: str, price: float):&#10;        self.name = name&#10;        self.price = price&#10;&#10;    def get_name(self) -&gt; str:&#10;        return self.name&#10;&#10;    def get_price(self) -&gt; float:&#10;        return self.price&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/solid/srp_python/srp_product_repository.py">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/solid/srp_python/srp_product_repository.py" />
+              <option name="updatedContent" value="&quot;&quot;&quot;&#10;Product Repository - single responsibility: manage the list of products.&#10;&quot;&quot;&quot;&#10;&#10;from typing import List&#10;from srp_product import SrpProduct&#10;&#10;&#10;class SrpProductRepository:&#10;    def __init__(self):&#10;        self.products: List[SrpProduct] = []&#10;&#10;    def add_product(self, name: str, price: float) -&gt; None:&#10;        &quot;&quot;&quot;&#10;        Add a product to the repository by providing product details.&#10;        &quot;&quot;&quot;&#10;        product = SrpProduct(name, price)&#10;        self.products.append(product)&#10;        print(f&quot;Product added: {name} - ${price}&quot;)&#10;&#10;    def get_products(self) -&gt; List[SrpProduct]:&#10;        &quot;&quot;&quot;&#10;        Return the list of all products.&#10;        &quot;&quot;&quot;&#10;        return list(self.products)&#10;&#10;    def get_product_count(self) -&gt; int:&#10;        &quot;&quot;&quot;&#10;        Return the number of products in the repository.&#10;        &quot;&quot;&quot;&#10;        return len(self.products)&#10;&#10;    def display_products(self) -&gt; None:&#10;        &quot;&quot;&quot;&#10;        Display all products in the repository.&#10;        &quot;&quot;&quot;&#10;        if not self.products:&#10;            print(&quot;No products in repository.&quot;)&#10;            return&#10;        &#10;        print(&quot;\n=== Products in Repository ===&quot;)&#10;        for i, product in enumerate(self.products, 1):&#10;            print(f&quot;{i}. {product.get_name()} - ${product.get_price()}&quot;)&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
